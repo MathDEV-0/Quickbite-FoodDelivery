@@ -20,17 +20,19 @@ public class User implements Serializable {
 	private Long id;
 	private String name;
 	private String email;
+	private String password;
 	private String address;
 	
 	public User() {
 		
 	}
 
-	public User(Long id, String name, String email, String adress) {
+	public User(Long id, String name, String email, String password,String adress) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
+		this.password = password;
 		this.address = adress;
 	}
 
@@ -57,6 +59,14 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public String getAdress() {
 		return address;
@@ -65,6 +75,8 @@ public class User implements Serializable {
 	public void setAdress(String adress) {
 		this.address = adress;
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -82,6 +94,8 @@ public class User implements Serializable {
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	
 	
 	
 }

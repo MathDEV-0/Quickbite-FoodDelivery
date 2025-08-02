@@ -18,8 +18,8 @@ public class TestConfig implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		System.out.println("Seeding...");
 		
-		User u1 = new User(null,"Carlos da Silva", "carlos@gmail.com", "Travessa do Tranco");
-		User u2 = new User(null,"Maria de Jesus", "maria@gmail.com", "Beco Diagonal");
+		User u1 = new User(null,"Carlos da Silva", "carlos@gmail.com", "123","Travessa do Tranco");
+		User u2 = new User(null,"Maria de Jesus", "maria@gmail.com", "123", "Beco Diagonal");
 		
 		userRepository.saveAll(Arrays.asList(u1,u2));
 	}
