@@ -1,11 +1,11 @@
 package com.mathdev.quickbite.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mathdev.quickbite.dto.UserDTO;
 import com.mathdev.quickbite.entities.User;
 import com.mathdev.quickbite.repositories.UserRepository;
 
@@ -16,20 +16,25 @@ public class UserService {
 	UserRepository repo;
 	
 	//GET SERVICES
-	public List<User> findAll(){
-		return repo.findAll();
+	public List<UserDTO> findAll(){
+		List<User> users = repo.findAll();
+		
+		return users.stream().map(this::toDTO).toList();
 	}
 	
-	public User findById(Long id) {
-		Optional<User> obj = repo.findById(id);
+	public UserDTO findById(Long id) {
+		User obj = repo.findById(id).orElseThrow(()->new RuntimeException("User not found!"));
 		
-		return obj.get();
+		return toDTO(obj);
 	}
 	
 	
 	//POST SERVICES
-	public User createUser(User user) {
-		return repo.save(user);
+	public UserDTO insert(UserDTO dto) {
+		User obj = fromDTO(dto);
+		obj = repo.save(obj);
+		
+		return toDTO(obj);
 	}
 	
 	//DELETE SERVICES
@@ -38,16 +43,25 @@ public class UserService {
 	}
 	
 	//PUT SERVICES
-	public User update(Long id, User newUser) {
+	public UserDTO update(Long id, UserDTO newUser) {
 		User entity =  repo.getReferenceById(id);
 		updateData(entity, newUser);
 		
-		return repo.save(entity);
+		return toDTO(repo.save(entity));
 	}
 	
-	private void updateData(User entity, User newUser) {
-		entity.setName(newUser.getName());
-		entity.setEmail(newUser.getEmail());
-		entity.setAdress(newUser.getAdress());
+	//AUXILIARY METHODS
+	private void updateData(User entity, UserDTO newUser) {
+		entity.setName(newUser.name());
+		entity.setEmail(newUser.email());
+		entity.setAddress(newUser.address());
+	}
+	
+	private User fromDTO(UserDTO dto) {
+		return new User(dto.id(),dto.name(),dto.email(),null,dto.address());
+	}
+	
+	private UserDTO toDTO(User entity) {
+		return new UserDTO(entity.getId(),entity.getName(),entity.getEmail(),entity.getAddress());
 	}
 }

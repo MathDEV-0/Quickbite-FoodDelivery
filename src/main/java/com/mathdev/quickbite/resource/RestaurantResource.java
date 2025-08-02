@@ -15,35 +15,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.mathdev.quickbite.dto.UserDTO;
-import com.mathdev.quickbite.services.UserService;
+import com.mathdev.quickbite.dto.RestaurantDTO;
+import com.mathdev.quickbite.services.RestaurantService;
+
 
 @RestController
-@RequestMapping(value = "/users")
-public class UserResource {
+@RequestMapping(value = "/restaurants")
+public class RestaurantResource {
 	
 	@Autowired
-	UserService userService;
+	RestaurantService restaurantService;
 	
 	//GET CONTROLLERS
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> getAllUsers(){
-		List<UserDTO> temp = userService.findAll();
+	public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(){
+		List<RestaurantDTO> temp = restaurantService.findAll();
 		
 		return ResponseEntity.ok().body(temp);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
-		UserDTO obj = userService.findById(id);
+	public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long id){
+		RestaurantDTO obj = restaurantService.findById(id);
 		
 		return ResponseEntity.ok().body(obj);
 	}
 	
 	//POST CONTROLLERS
 	@PostMapping
-	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto){
-		UserDTO tempDTO = userService.insert(dto);
+	public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO dto){
+		RestaurantDTO tempDTO = restaurantService.insert(dto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.id()).toUri();
@@ -54,15 +55,15 @@ public class UserResource {
 	//DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-		userService.deleteUser(id);
+		restaurantService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
 	}
 	
 	//PUT CONTROLLERS
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,@RequestBody UserDTO dto){
-		dto = userService.update(id, dto);
+	public ResponseEntity<RestaurantDTO> updateUser(@PathVariable Long id,@RequestBody RestaurantDTO dto){
+		dto = restaurantService.update(id, dto);
 		
 		return ResponseEntity.ok().body(dto);
 	}
