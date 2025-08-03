@@ -17,42 +17,38 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mathdev.quickbite.dto.OrderDTO;
 import com.mathdev.quickbite.dto.UserDTO;
+import com.mathdev.quickbite.services.OrderService;
 import com.mathdev.quickbite.services.UserService;
 
 @RestController
-@RequestMapping(value = "/users")
-public class UserResource {
+@RequestMapping(value = "/orders")
+public class OrdersResource {
 	
 	@Autowired
-	UserService userService;
+	OrderService orderService;
 	
 
 	
 	//GET CONTROLLERS
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> getAllUsers(){
-		List<UserDTO> temp = userService.findAll();
+	public ResponseEntity<List<OrderDTO>> getAllUsers(){
+		List<OrderDTO> temp = orderService.findAll();
 		
 		return ResponseEntity.ok().body(temp);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
-		UserDTO obj = userService.findById(id);
+	public ResponseEntity<OrderDTO> getUserById(@PathVariable Long id){
+		OrderDTO obj = orderService.findById(id);
 		
 		return ResponseEntity.ok().body(obj);
 	}
-	
-	@GetMapping("/{id}/orders")
-    public ResponseEntity<List<OrderDTO>> getOrdersFromUser(@PathVariable Long id) {
-        List<OrderDTO> orders = userService.getOrdersByUser(id);
-        return ResponseEntity.ok(orders);
-	}
+
 	
 	//POST CONTROLLERS
 	@PostMapping
-	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto){
-		UserDTO tempDTO = userService.insert(dto);
+	public ResponseEntity<OrderDTO> createUser(@RequestBody OrderDTO dto){
+		OrderDTO tempDTO = orderService.insert(dto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.id()).toUri();
@@ -63,15 +59,15 @@ public class UserResource {
 	//DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-		userService.deleteUser(id);
+		orderService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
 	}
 	
 	//PUT CONTROLLERS
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable Long id,@RequestBody UserDTO dto){
-		dto = userService.update(id, dto);
+	public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id,@RequestBody OrderDTO dto){
+		dto = orderService.update(id, dto);
 		
 		return ResponseEntity.ok().body(dto);
 	}
