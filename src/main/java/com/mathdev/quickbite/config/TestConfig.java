@@ -1,14 +1,18 @@
 package com.mathdev.quickbite.config;
 
+import java.time.Instant;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
+import com.mathdev.quickbite.entities.enums.OrderStatus;
+import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
 import com.mathdev.quickbite.repositories.UserRepository;
@@ -24,6 +28,9 @@ public class TestConfig implements CommandLineRunner{
 	@Autowired
 	private ProductRepository productRepository;
 	
+	@Autowired
+	private OrderRepository orderRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 	    System.out.println("Seeding...");
@@ -33,8 +40,8 @@ public class TestConfig implements CommandLineRunner{
 	    
 	    userRepository.saveAll(Arrays.asList(u1,u2));
 	    
-	    Restaurant r1 = new Restaurant(null,"Caldeirão Furado","Beco Diagonal");
-	    Restaurant r2 = new Restaurant(null,"Três Vassouras","Hogsmead");
+	    Restaurant r1 = new Restaurant(null,"Caldeirão Furado","caldeiraofurado@hogwarts.com","1235","Beco Diagonal");
+	    Restaurant r2 = new Restaurant(null,"Três Vassouras","tresvassouras@hogwarts.com","1235","Hogsmead");
 	    
 	    restaurantRepository.saveAll(Arrays.asList(r1,r2));
 	    
@@ -47,6 +54,13 @@ public class TestConfig implements CommandLineRunner{
 	    r2.getProducts().add(p3);
 	    
 	    productRepository.saveAll(Arrays.asList(p1,p2,p3));
+	    
+	    Order o1 = new Order(null, Instant.now(), u1);
+        Order o2 = new Order(null, Instant.now(), u2);
+
+     
+
+        orderRepository.saveAll(Arrays.asList(o1, o2));
 	}
 
 	

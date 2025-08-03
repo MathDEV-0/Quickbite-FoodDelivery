@@ -23,9 +23,9 @@ public class RestaurantService {
 	ProductRepository productRepository;
 	//GET SERVICES
 	public List<RestaurantDTO> findAll(){
-		List<Restaurant> users = repo.findAll();
+		List<Restaurant> restaurants = repo.findAll();
 		
-		return users.stream().map(this::toDTO).toList();
+		return restaurants.stream().map(this::toDTO).collect(Collectors.toList()); //fitful for Java < 16 versions
 	}
 	
 	public RestaurantDTO findById(Long id) {
@@ -80,10 +80,10 @@ public class RestaurantService {
 	}
 	
 	private Restaurant fromDTO(RestaurantDTO dto) {
-		return new Restaurant(dto.id(),dto.name(),dto.address());
+		return new Restaurant(dto.id(),dto.name(),null,null,dto.address());
 	}
 	
 	private RestaurantDTO toDTO(Restaurant entity) {
-		return new RestaurantDTO(entity.getId(),entity.getName(),entity.getAddress());
+		return new RestaurantDTO(entity.getId(),entity.getName(),entity.getEmail(),entity.getAddress());
 	}
 }
