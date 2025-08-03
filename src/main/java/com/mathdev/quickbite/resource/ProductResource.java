@@ -16,41 +16,35 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mathdev.quickbite.dto.ProductDTO;
-import com.mathdev.quickbite.dto.RestaurantDTO;
-import com.mathdev.quickbite.services.RestaurantService;
+import com.mathdev.quickbite.services.ProductService;
 
 
 @RestController
-@RequestMapping(value = "/restaurants")
-public class RestaurantResource {
+@RequestMapping(value = "/products")
+public class ProductResource {
 	
 	@Autowired
-	RestaurantService restaurantService;
+	ProductService userService;
 	
 	//GET CONTROLLERS
 	@GetMapping
-	public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(){
-		List<RestaurantDTO> temp = restaurantService.findAll();
+	public ResponseEntity<List<ProductDTO>> getAllProducts(){
+		List<ProductDTO> temp = userService.findAll();
 		
 		return ResponseEntity.ok().body(temp);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long id){
-		RestaurantDTO obj = restaurantService.findById(id);
+	public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id){
+		ProductDTO obj = userService.findById(id);
 		
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	@GetMapping("/{id}/products")
-    public List<ProductDTO> findProducts(@PathVariable Long id) {
-        return restaurantService.findProductsByRestaurant(id);
-    }
-	
 	//POST CONTROLLERS
 	@PostMapping
-	public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO dto){
-		RestaurantDTO tempDTO = restaurantService.insert(dto);
+	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO dto){
+		ProductDTO tempDTO = userService.insert(dto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.id()).toUri();
@@ -60,16 +54,16 @@ public class RestaurantResource {
 	
 	//DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-		restaurantService.deleteUser(id);
+	public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+		userService.deleteUser(id);
 		
 		return ResponseEntity.noContent().build();
 	}
 	
 	//PUT CONTROLLERS
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<RestaurantDTO> updateUser(@PathVariable Long id,@RequestBody RestaurantDTO dto){
-		dto = restaurantService.update(id, dto);
+	public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,@RequestBody ProductDTO dto){
+		dto = userService.update(id, dto);
 		
 		return ResponseEntity.ok().body(dto);
 	}

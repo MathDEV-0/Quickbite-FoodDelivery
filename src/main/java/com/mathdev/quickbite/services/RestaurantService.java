@@ -1,12 +1,16 @@
 package com.mathdev.quickbite.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mathdev.quickbite.dto.ProductDTO;
 import com.mathdev.quickbite.dto.RestaurantDTO;
+import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
+import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
 
 @Service
@@ -15,6 +19,8 @@ public class RestaurantService {
 	@Autowired
 	RestaurantRepository repo;
 	
+	@Autowired
+	ProductRepository productRepository;
 	//GET SERVICES
 	public List<RestaurantDTO> findAll(){
 		List<Restaurant> users = repo.findAll();
@@ -23,11 +29,28 @@ public class RestaurantService {
 	}
 	
 	public RestaurantDTO findById(Long id) {
-		Restaurant obj = repo.findById(id).orElseThrow(()->new RuntimeException("User not found!"));
+		Restaurant obj = repo.findById(id).orElseThrow(()->new RuntimeException("Restaurant not found!"));
 		
 		return toDTO(obj);
 	}
 	
+	public List<ProductDTO> findProductsByRestaurant(Long restaurantId) {
+		if (!repo.existsById(restaurantId)) {
+		    throw new RuntimeException("Restaurant not found");
+		}
+
+	    List<Product> products = productRepository.findByRestaurantId(restaurantId);
+
+	    return products.stream()
+	            .map(product -> new ProductDTO(
+	                    product.getId(),
+	                    product.getName(),
+	                    product.getDescription(),
+	                    product.getBasePrice(),
+	                    product.getRestaurant().getId()))
+	            .collect(Collectors.toList());
+	}
+
 	
 	//POST SERVICES
 	public RestaurantDTO insert(RestaurantDTO dto) {

@@ -1,42 +1,45 @@
 package com.mathdev.quickbite.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_restaurants")
-public class Restaurant implements Serializable{
+@Table(name = "tb_product")
+public class Product implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
-	private String address;
+	private String description;
+	private Double basePrice; 
 	
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-	private Set<Product> products = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "restaurant_id")
+	private Restaurant restaurant;
 	
-	public Restaurant() {
+	public Product() {
 		
 	}
-	
-	public Restaurant(Long id, String name, String address) {
+
+	public Product(Long id, String name, String description, Double basePrice, Restaurant restaurant) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.address = address;
+		this.description = description;
+		this.basePrice = basePrice;
+		this.restaurant = restaurant;
 	}
 
 	public Long getId() {
@@ -55,26 +58,27 @@ public class Restaurant implements Serializable{
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
-	public Set<Product> getProducts(){
-		return products;
-	}
-	
-	public void addProduct(Product product) {
-	    products.add(product);
-	    product.setRestaurant(this);
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public void removeProduct(Product product) {
-	    products.remove(product);
-	    product.setRestaurant(null);
+	public Double getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Double basePrice) {
+		this.basePrice = basePrice;
+	}
+
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
 	}
 
 	@Override
@@ -90,10 +94,9 @@ public class Restaurant implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Restaurant other = (Restaurant) obj;
+		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-	
 	
 	
 }
