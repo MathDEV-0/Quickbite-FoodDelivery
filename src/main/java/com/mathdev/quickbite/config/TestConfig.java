@@ -11,7 +11,6 @@ import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
-import com.mathdev.quickbite.entities.enums.OrderStatus;
 import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
@@ -57,10 +56,11 @@ public class TestConfig implements CommandLineRunner{
 	    
 	    Order o1 = new Order(null, Instant.now(), u1);
         Order o2 = new Order(null, Instant.now(), u2);
+        Order o3 = new Order(null,Instant.now(),u1);
 
      
 
-        orderRepository.saveAll(Arrays.asList(o1, o2));
+        orderRepository.saveAll(Arrays.asList(o1, o2,o3));
 	}
 
 	

@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mathdev.quickbite.dto.OrderDTO;
-import com.mathdev.quickbite.dto.UserDTO;
 import com.mathdev.quickbite.services.OrderService;
-import com.mathdev.quickbite.services.UserService;
+
 
 @RestController
 @RequestMapping(value = "/orders")
