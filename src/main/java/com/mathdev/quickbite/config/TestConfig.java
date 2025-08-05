@@ -8,9 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import com.mathdev.quickbite.entities.Order;
+import com.mathdev.quickbite.entities.OrderItem;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
+import com.mathdev.quickbite.repositories.OrderItemRepository;
 import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
@@ -29,6 +31,10 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -57,10 +63,18 @@ public class TestConfig implements CommandLineRunner{
 	    Order o1 = new Order(null, Instant.now(), u1);
         Order o2 = new Order(null, Instant.now(), u2);
         Order o3 = new Order(null,Instant.now(),u1);
-
-     
-
+        
         orderRepository.saveAll(Arrays.asList(o1, o2,o3));
+        
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getBasePrice()); 
+	    OrderItem oi2 = new OrderItem(o3, p3, 1, p3.getBasePrice()); 
+	    OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getBasePrice()); 
+
+	    orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3));
+	    
+        
+        
+    
 	}
 
 	
