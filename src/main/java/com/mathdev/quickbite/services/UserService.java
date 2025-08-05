@@ -1,12 +1,14 @@
 package com.mathdev.quickbite.services;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.OrderDTO;
+import com.mathdev.quickbite.dto.OrderItemDTO;
 import com.mathdev.quickbite.dto.UserDTO;
 import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.User;
@@ -79,8 +81,20 @@ public class UserService {
 	}
 	
 	private OrderDTO toOrderDTO(Order order) {
-	    return new OrderDTO(order.getId(), order.getMoment(), toDTO(order.getClient()));
+	    UserDTO userDto = toDTO(order.getClient());
+
+	    Set<OrderItemDTO> itemsDTO = order.getItems().stream()
+	            .map(item -> new OrderItemDTO(
+	                    item.getProduct().getId(),
+	                    item.getProduct().getName(),
+	                    item.getPrice(),
+	                    item.getQuantity(),
+	                    item.getSubtotal()))
+	            .collect(Collectors.toSet());
+
+	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO);
 	}
+
 
 
 }

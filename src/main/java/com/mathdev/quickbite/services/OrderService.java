@@ -1,12 +1,14 @@
 package com.mathdev.quickbite.services;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.OrderDTO;
+import com.mathdev.quickbite.dto.OrderItemDTO;
 import com.mathdev.quickbite.dto.UserDTO;
 import com.mathdev.quickbite.entities.User;
 import com.mathdev.quickbite.repositories.OrderRepository;
@@ -36,18 +38,11 @@ public class OrderService {
 	}
 	
 	public List<OrderDTO> findOrdersByUserId(Long userId) {
-        List<Order> list = repo.findByClientId(userId);
-        return list.stream()
-                .map(order -> new OrderDTO(
-                        order.getId(),
-                        order.getMoment(),
-                        new UserDTO(
-                            order.getClient().getId(),
-                            order.getClient().getName(),
-                            order.getClient().getEmail(),
-                            order.getClient().getAddress())))
-                .collect(Collectors.toList());
-    }
+	    List<Order> list = repo.findByClientId(userId);
+	    return list.stream()
+	            .map(this::toDTO)
+	            .collect(Collectors.toList());
+	}
 	
 	
 	//POST SERVICES
@@ -91,14 +86,29 @@ public class OrderService {
 	}
 	
 	private OrderDTO toDTO(Order entity) {
-		UserDTO dto = null;
+		UserDTO userDto = null;
 		if(entity.getClient() != null) {
-			dto = new UserDTO(entity.getClient().getId(),
+			userDto = new UserDTO(entity.getClient().getId(),
 					entity.getClient().getName(),
 					entity.getClient().getEmail(),
 					entity.getClient().getAddress()
 					);
 		}
-		return new OrderDTO(entity.getId(),entity.getMoment(),dto);
+		Set<OrderItemDTO> itemsDTO = entity.getItems().stream()
+                .map(item -> new OrderItemDTO(
+                        item.getProduct().getId(),
+                        item.getProduct().getName(),
+                        item.getPrice(),
+                        item.getQuantity(),
+                        item.getSubtotal()))
+                .collect(Collectors.toSet());
+
+        return new OrderDTO(
+                entity.getId(),
+                entity.getMoment(),
+                userDto,
+                itemsDTO);
+    }
+
 	}
-}
+

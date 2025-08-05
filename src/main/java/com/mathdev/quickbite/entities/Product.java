@@ -1,7 +1,11 @@
 package com.mathdev.quickbite.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +33,9 @@ public class Product implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id")
 	private Restaurant restaurant;
+	
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> orders = new HashSet<>();
 	
 	public Product() {
 		
@@ -80,6 +88,18 @@ public class Product implements Serializable{
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
+	
+	@JsonIgnore
+	public Set<Order> getOrders(){
+		Set<Order> temp = new HashSet<>();
+		
+		for(OrderItem x: orders) {
+			temp.add(x.getOrder());
+		}
+		
+		return temp;
+	}
+
 
 	@Override
 	public int hashCode() {
