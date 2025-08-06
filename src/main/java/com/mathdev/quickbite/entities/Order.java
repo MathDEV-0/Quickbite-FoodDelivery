@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +35,10 @@ public class Order implements Serializable{
 	
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+	
+	@ManyToOne
+	@JoinColumn(name = "coupon_id")
+	private Coupon coupon;
 	
 	public Order() {
 		
@@ -73,7 +78,33 @@ public class Order implements Serializable{
 	public Set<OrderItem> getItems(){
 		return items;
 	}
+	
+	public Coupon getCoupon() {
+		return coupon;
+	}
 
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
+	}
+
+	public Double getSubtotal() {
+		double sum = 0.0;
+		
+		for(OrderItem item: items) {
+			sum += item.getSubtotal();
+		}
+		
+		return sum;
+	}
+	
+	public Double getTotal() {
+		Double total = getSubtotal();
+		if(this.coupon != null && this.coupon.getActive()) {
+			total = total	- (total *(coupon.getDiscount()/100));
+		}
+		return total;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

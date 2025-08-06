@@ -10,6 +10,7 @@ public record OrderDTO(
 		Instant moment,
 		@JsonIgnore
 		UserDTO client,
-		Set<OrderItemDTO> products ){
+		Set<OrderItemDTO> products,
+		Double total){
 
 }

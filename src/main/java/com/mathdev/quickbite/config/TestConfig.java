@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.mathdev.quickbite.entities.Coupon;
 import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.OrderItem;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
+import com.mathdev.quickbite.repositories.CouponRepository;
 import com.mathdev.quickbite.repositories.OrderItemRepository;
 import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.ProductRepository;
@@ -35,6 +37,8 @@ public class TestConfig implements CommandLineRunner{
 	@Autowired
 	private OrderItemRepository orderItemRepository;
 	
+	@Autowired
+	private CouponRepository couponRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -47,32 +51,54 @@ public class TestConfig implements CommandLineRunner{
 	    
 	    Restaurant r1 = new Restaurant(null,"Caldeirão Furado","caldeiraofurado@hogwarts.com","1235","Beco Diagonal");
 	    Restaurant r2 = new Restaurant(null,"Três Vassouras","tresvassouras@hogwarts.com","1235","Hogsmead");
+	    Restaurant r3 = new Restaurant(null, "Zonko's Doces & Travessuras", "zonkos@hogwarts.com", "1235", "Hogsmeade");
+	    Restaurant r4 = new Restaurant(null, "Florean Fortescue Sorveteria", "florean@hogwarts.com", "1235", "Beco Diagonal");
+
+	    Coupon cp1 = new Coupon(null,"HOGWARTS10",10.0,true, Instant.parse("2025-08-09T14:00:00Z"));
+	    couponRepository.save(cp1); 
 	    
-	    restaurantRepository.saveAll(Arrays.asList(r1,r2));
+	    restaurantRepository.saveAll(Arrays.asList(r1,r2,r3,r4));
 	    
 	    Product p1 = new Product(null, "Cerveja Amanteigada", "Deliciosa cerveja amanteigada servida quente", 10.0, r1);
 	    Product p2 = new Product(null, "Sapos de Chocolate", "Doces em formato de sapo que pulam!", 5.0, r2);
 	    Product p3 = new Product(null, "Poção Polissuco", "Permite assumir a forma de outra pessoa", 50.0, r2);
+	    Product p4 = new Product(null, "Feijõezinhos de Todos os Sabores", "Doces mágicos com sabores imprevisíveis", 4.0, r2);
+	    Product p5 = new Product(null, "Varinha de Regaliz", "Doce em forma de varinha mágica", 3.5, r2);
+	    Product p6 = new Product(null, "Bolo Explosivo dos Weasley", "Bolo mágico que solta faíscas ao ser cortado", 12.0, r1);
+	    Product p7 = new Product(null, "Biscoitos da Sorte da Trelawney", "Biscoitos que revelam previsões místicas", 6.0, r1);
+	    Product p8 = new Product(null, "Chá Enfeitiçado de Camomila", "Relaxa até o bruxo mais estressado", 7.0, r1);
+	    Product p9 = new Product(null, "Rãs de Menta Mágicas", "Saltam suavemente na boca, sensação geladinha!", 4.5, r2);
+	    Product p10 = new Product(null, "Pipoca Encantada de Hogwarts", "Estoura sozinha e muda de cor", 6.5, r1);
+	    Product p11 = new Product(null, "Gotas de Azar", "Doces de desafio: um em cada dez causa soluços", 3.0, r2);
+	    Product p12 = new Product(null, "Poção do Amor", "Adoça o humor de quem prova... ou quase!", 20.0, r2);
+
 	    
-	    r1.getProducts().add(p1);
-	    r2.getProducts().add(p2);
-	    r2.getProducts().add(p3);
+	    r1.getProducts().addAll(Arrays.asList(p1, p6, p7, p8, p10));
+	    r2.getProducts().addAll(Arrays.asList(p2, p3, p4, p5, p9, p11, p12));
 	    
-	    productRepository.saveAll(Arrays.asList(p1,p2,p3));
+	    productRepository.saveAll(Arrays.asList(p1,p2,p3, p4, p5, p6, p7, p8, p9, p10, p11, p12));
 	    
 	    Order o1 = new Order(null, Instant.now(), u1);
         Order o2 = new Order(null, Instant.now(), u2);
         Order o3 = new Order(null,Instant.now(),u1);
+        
+        o3.setCoupon(cp1);
         
         orderRepository.saveAll(Arrays.asList(o1, o2,o3));
         
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getBasePrice()); 
 	    OrderItem oi2 = new OrderItem(o3, p3, 1, p3.getBasePrice()); 
 	    OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getBasePrice()); 
+	    OrderItem oi4 = new OrderItem(o1, p6, 1, p6.getBasePrice()); 
+	    OrderItem oi5 = new OrderItem(o1, p8, 1, p8.getBasePrice());  
+	    OrderItem oi6 = new OrderItem(o2, p9, 3, p9.getBasePrice());  
+	    OrderItem oi7 = new OrderItem(o2, p11, 2, p11.getBasePrice());
+	    OrderItem oi8 = new OrderItem(o3, p4, 5, p4.getBasePrice());  
+	    OrderItem oi9 = new OrderItem(o3, p10, 1, p10.getBasePrice());
+	    OrderItem oi10 = new OrderItem(o3, p12, 1, p12.getBasePrice());
 
-	    orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3));
+	    orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4, oi5, oi6, oi7, oi8, oi9, oi10));
 	    
-        
         
     
 	}
