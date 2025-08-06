@@ -91,8 +91,13 @@ public class UserService {
 	                    item.getQuantity(),
 	                    item.getSubtotal()))
 	            .collect(Collectors.toSet());
-
-	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO);
+	    
+	    double total = 0.0;
+		
+		for(OrderItemDTO item: itemsDTO) {
+			total += item.subtotal();
+		}
+	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO,total);
 	}
 
 

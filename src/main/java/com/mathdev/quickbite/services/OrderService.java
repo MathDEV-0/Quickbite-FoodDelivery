@@ -102,12 +102,23 @@ public class OrderService {
                         item.getQuantity(),
                         item.getSubtotal()))
                 .collect(Collectors.toSet());
-
+		
+		double total = 0.0;
+		
+		for(OrderItemDTO item: itemsDTO) {
+			total += item.subtotal();
+		}
+		if(entity.getCoupon()!= null) {
+			total = total * (1 - entity.getCoupon().getDiscount() / 100);
+			total = Math.round(total * 100) / 100.0;
+		}
+				
         return new OrderDTO(
                 entity.getId(),
                 entity.getMoment(),
                 userDto,
-                itemsDTO);
+                itemsDTO,
+                total);
     }
 
 	}
