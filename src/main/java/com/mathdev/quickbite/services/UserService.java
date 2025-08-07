@@ -1,19 +1,20 @@
 package com.mathdev.quickbite.services;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.OrderDTO;
-import com.mathdev.quickbite.dto.OrderItemDTO;
 import com.mathdev.quickbite.dto.UserDTO;
 import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.User;
+import com.mathdev.quickbite.mapper.OrderMapper;
+import com.mathdev.quickbite.mapper.UserMapper;
 import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.UserRepository;
+
 
 @Service
 public class UserService {
@@ -28,28 +29,28 @@ public class UserService {
 	public List<UserDTO> findAll(){
 		List<User> users = repo.findAll();
 		
-		return users.stream().map(this::toDTO).toList();
+		return users.stream().map(UserMapper::toDTO).toList();
 	}
 	
 	public UserDTO findById(Long id) {
 		User obj = repo.findById(id).orElseThrow(()->new RuntimeException("User not found!"));
 		
-		return toDTO(obj);
+		return UserMapper.toDTO(obj);
 	}
 	
 	public List<OrderDTO> getOrdersByUser(Long userId) {
 	    List<Order> orders = orderRepository.findByClientId(userId);
 	    return orders.stream()
-	                 .map(this::toOrderDTO)
+	                 .map(OrderMapper::toDTO)
 	                 .collect(Collectors.toList());
 	}
 
 	//POST SERVICES
 	public UserDTO insert(UserDTO dto) {
-		User obj = fromDTO(dto);
+		User obj = UserMapper.fromDTO(dto);
 		obj = repo.save(obj);
 		
-		return toDTO(obj);
+		return UserMapper.toDTO(obj);
 	}
 	
 	//DELETE SERVICES
@@ -62,7 +63,7 @@ public class UserService {
 		User entity =  repo.getReferenceById(id);
 		updateData(entity, newUser);
 		
-		return toDTO(repo.save(entity));
+		return UserMapper.toDTO(repo.save(entity));
 	}
 	
 	//AUXILIARY METHODS
@@ -72,34 +73,5 @@ public class UserService {
 		entity.setAddress(newUser.address());
 	}
 	
-	private User fromDTO(UserDTO dto) {
-		return new User(dto.id(),dto.name(),dto.email(),null,dto.address());
-	}
-	
-	private UserDTO toDTO(User entity) {
-		return new UserDTO(entity.getId(),entity.getName(),entity.getEmail(),entity.getAddress());
-	}
-	
-	private OrderDTO toOrderDTO(Order order) {
-	    UserDTO userDto = toDTO(order.getClient());
-
-	    Set<OrderItemDTO> itemsDTO = order.getItems().stream()
-	            .map(item -> new OrderItemDTO(
-	                    item.getProduct().getId(),
-	                    item.getProduct().getName(),
-	                    item.getPrice(),
-	                    item.getQuantity(),
-	                    item.getSubtotal()))
-	            .collect(Collectors.toSet());
-	    
-	    double total = 0.0;
-		
-		for(OrderItemDTO item: itemsDTO) {
-			total += item.subtotal();
-		}
-	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO,total,order.getOrderStatus());
-	}
-
-
 
 }
