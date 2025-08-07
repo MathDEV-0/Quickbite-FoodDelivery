@@ -97,7 +97,7 @@ public class UserService {
 		for(OrderItemDTO item: itemsDTO) {
 			total += item.subtotal();
 		}
-	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO,total);
+	    return new OrderDTO(order.getId(), order.getMoment(), userDto, itemsDTO,total,order.getOrderStatus());
 	}
 
 

@@ -82,7 +82,7 @@ public class OrderService {
 			user = new User();
 			user.setId(dto.client().id());
 		}
-		return new Order(dto.id(),dto.moment(),user);
+		return new Order(dto.id(),dto.moment(),user,dto.status());
 	}
 	
 	private OrderDTO toDTO(Order entity) {
@@ -118,7 +118,8 @@ public class OrderService {
                 entity.getMoment(),
                 userDto,
                 itemsDTO,
-                total);
+                total,
+                entity.getOrderStatus());
     }
 
 	}
