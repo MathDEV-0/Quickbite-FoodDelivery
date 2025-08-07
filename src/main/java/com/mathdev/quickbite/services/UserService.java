@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.OrderDTO;
 import com.mathdev.quickbite.dto.UserDTO;
+import com.mathdev.quickbite.dto.UserInsertDTO;
 import com.mathdev.quickbite.entities.Order;
 import com.mathdev.quickbite.entities.User;
 import com.mathdev.quickbite.mapper.OrderMapper;
@@ -46,8 +47,8 @@ public class UserService {
 	}
 
 	//POST SERVICES
-	public UserDTO insert(UserDTO dto) {
-		User obj = UserMapper.fromDTO(dto);
+	public UserDTO insert(UserInsertDTO dto) {
+		User obj = UserMapper.fromDTOInsert(dto);
 		obj = repo.save(obj);
 		
 		return UserMapper.toDTO(obj);

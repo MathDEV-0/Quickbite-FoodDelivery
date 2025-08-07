@@ -1,6 +1,7 @@
 package com.mathdev.quickbite.mapper;
 
 import com.mathdev.quickbite.dto.UserDTO;
+import com.mathdev.quickbite.dto.UserInsertDTO;
 import com.mathdev.quickbite.entities.User;
 
 public class UserMapper {
@@ -11,4 +12,8 @@ public class UserMapper {
 		
         return new User(dto.id(), dto.name(), dto.email(), null, dto.address());
     }
+	
+	public static User fromDTOInsert(UserInsertDTO dto) {
+	    return new User(null, dto.name(), dto.email(), dto.password(), dto.address());
+	}
 }
