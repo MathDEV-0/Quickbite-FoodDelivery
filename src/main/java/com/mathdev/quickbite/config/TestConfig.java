@@ -13,6 +13,7 @@ import com.mathdev.quickbite.entities.OrderItem;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
+import com.mathdev.quickbite.entities.enums.OrderStatus;
 import com.mathdev.quickbite.repositories.CouponRepository;
 import com.mathdev.quickbite.repositories.OrderItemRepository;
 import com.mathdev.quickbite.repositories.OrderRepository;
@@ -78,9 +79,9 @@ public class TestConfig implements CommandLineRunner{
 	    
 	    productRepository.saveAll(Arrays.asList(p1,p2,p3, p4, p5, p6, p7, p8, p9, p10, p11, p12));
 	    
-	    Order o1 = new Order(null, Instant.now(), u1);
-        Order o2 = new Order(null, Instant.now(), u2);
-        Order o3 = new Order(null,Instant.now(),u1);
+	    Order o1 = new Order(null, Instant.now(), u1,OrderStatus.PENDING);
+        Order o2 = new Order(null, Instant.now(), u2,OrderStatus.OUT_FOR_DELIVERY);
+        Order o3 = new Order(null,Instant.now(),u1,OrderStatus.PREPARING);
         
         o3.setCoupon(cp1);
         
