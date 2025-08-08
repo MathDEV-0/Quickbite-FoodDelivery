@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.mathdev.quickbite.entities.enums.OrderStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,7 +37,7 @@ public class Order implements Serializable{
 	
 	Integer orderStatus;
 	
-	@OneToMany(mappedBy = "id.order")
+	@OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
 	private Set<OrderItem> items = new HashSet<>();
 	
 	@ManyToOne
