@@ -32,7 +32,7 @@ public class Cart implements Serializable{
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "id.cart", cascade = CascadeType.ALL)
 	private List<CartItem> items = new ArrayList<CartItem>();
 	
 	@ManyToOne

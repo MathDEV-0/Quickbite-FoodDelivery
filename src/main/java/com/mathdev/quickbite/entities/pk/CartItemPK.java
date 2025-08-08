@@ -41,7 +41,10 @@ public class CartItemPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cart, product);
+	    return Objects.hash(
+	        cart != null ? cart.getId() : 0, 
+	        product != null ? product.getId() : 0
+	    );
 	}
 
 	@Override

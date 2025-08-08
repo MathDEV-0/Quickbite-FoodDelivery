@@ -5,19 +5,24 @@ import java.util.Objects;
 
 import com.mathdev.quickbite.entities.pk.CartItemPK;
 
-public class CartItem implements Serializable{
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+
+@Entity
+public class CartItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	@EmbeddedId
 	private CartItemPK id = new CartItemPK();
 	private Integer quantity;
 	private Double price;
-	
+
 	public CartItem() {
-		
+
 	}
 
-	public CartItem(Cart cart,Product product, Integer quantity, Double price) {
+	public CartItem(Cart cart, Product product, Integer quantity, Double price) {
 		super();
 		this.id.setCart(cart);
 		this.id.setProduct(product);
@@ -52,6 +57,7 @@ public class CartItem implements Serializable{
 	public Double getSubtotal() {
 		return price * quantity;
 	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -61,12 +67,10 @@ public class CartItem implements Serializable{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		CartItem other = (CartItem) obj;
 		return Objects.equals(id, other.id);
 	}
-		
+
 }
