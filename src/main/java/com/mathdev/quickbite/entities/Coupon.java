@@ -1,5 +1,6 @@
 package com.mathdev.quickbite.entities;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -13,7 +14,10 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_coupon")
-public class Coupon {
+public class Coupon implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

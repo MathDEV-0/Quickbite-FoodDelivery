@@ -14,6 +14,8 @@ import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
 import com.mathdev.quickbite.entities.User;
 import com.mathdev.quickbite.entities.enums.OrderStatus;
+import com.mathdev.quickbite.repositories.CartItemRepository;
+import com.mathdev.quickbite.repositories.CartRepository;
 import com.mathdev.quickbite.repositories.CouponRepository;
 import com.mathdev.quickbite.repositories.OrderItemRepository;
 import com.mathdev.quickbite.repositories.OrderRepository;
@@ -40,6 +42,13 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private CouponRepository couponRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
+
+	@Autowired
+	private CartItemRepository cartItemRepository;
+
 	
 	@Override
 	public void run(String... args) throws Exception {
