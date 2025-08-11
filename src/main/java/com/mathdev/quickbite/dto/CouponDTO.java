@@ -8,6 +8,5 @@ public record CouponDTO(
 	    Long id,
 	    String code,
 	    Double discount,
-	    Instant moment,
-	    Long clientId
+	    Instant moment
 	) {}

@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,9 +24,6 @@ public class Coupon implements Serializable {
 	private Boolean active;
 	private Instant expiry;
 	
-	@ManyToOne
-    @JoinColumn(name = "client_id")
-    private User client;
 	
 	public Coupon() {
 		
@@ -83,15 +78,6 @@ public class Coupon implements Serializable {
 		this.expiry = expiry;
 	}
 	
-
-	public User getClient() {
-		return client;
-	}
-
-	public void setClient(User client) {
-		this.client = client;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

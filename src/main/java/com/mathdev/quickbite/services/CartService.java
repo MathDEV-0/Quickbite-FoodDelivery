@@ -22,6 +22,8 @@ import com.mathdev.quickbite.repositories.CartItemRepository;
 import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.UserRepository;
+import com.mathdev.quickbite.services.exceptions.DatabaseException;
+import com.mathdev.quickbite.services.exceptions.ResourceNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -43,7 +45,7 @@ public class CartService {
     // GET SERVICES
 
     public CartDTO getCart(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id" + userId));
 
         List<CartItem> items = cartItemRepository.findByIdCartUser(user);
 
@@ -65,8 +67,8 @@ public class CartService {
     // POST SERVICES
 
     public void addProductToCart(Long userId, Long productId, Integer quantity) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id "+ userId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found with id "+ productId));
         Cart cart = user.getCart();
 
         CartItem item = cartItemRepository.findByIdCartUserAndIdProduct(user, product)
@@ -78,7 +80,7 @@ public class CartService {
 
     @Transactional
     public OrderDTO checkout(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id "+ userId));
 
         Cart cart = user.getCart();
         if (cart == null) {
@@ -87,7 +89,7 @@ public class CartService {
 
         List<CartItem> cartItems = cartItemRepository.findByIdCartUser(user);
         if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty.");
+        	throw new ResourceNotFoundException("Cart is empty.");
         }
 
         Order order = new Order();
@@ -116,14 +118,18 @@ public class CartService {
     // DELETE SERVICES
 
     public void removeProductFromCart(Long userId, Long productId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id "+ userId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found with id "+ productId));
 
-        cartItemRepository.deleteByUserAndProduct(user, product);
+        try {
+            cartItemRepository.deleteByUserAndProduct(user, product);
+        } catch (Exception e) {
+            throw new DatabaseException("Could not delete cart item due to database constraints.");
+        }
     }
 
     public void clearCart(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id "+ userId));
         cartItemRepository.deleteByUser(user);
     }
 }

@@ -17,7 +17,6 @@ import com.mathdev.quickbite.dto.OrderDTO;
 import com.mathdev.quickbite.services.CartService;
 import com.mathdev.quickbite.services.OrderService;
 
-
 @RestController
 @RequestMapping(value = "/cart")
 public class CartResource {
@@ -42,11 +41,11 @@ public class CartResource {
 		cartService.addProductToCart(userId, request.productId(), request.quantity());
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@PostMapping("/{userId}/checkout")
 	public ResponseEntity<OrderDTO> checkout(@PathVariable Long userId) {
-	    OrderDTO order = cartService.checkout(userId);
-	    return ResponseEntity.ok(order);
+		OrderDTO order = cartService.checkout(userId);
+		return ResponseEntity.ok(order);
 	}
 
 	// DELETE CONTROLLERS
@@ -63,5 +62,5 @@ public class CartResource {
 	}
 
 	// PUT CONTROLLERS
-	
+
 }

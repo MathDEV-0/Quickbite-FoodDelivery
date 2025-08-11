@@ -30,14 +30,14 @@ public class OrdersResource {
 	
 	//GET CONTROLLERS
 	@GetMapping
-	public ResponseEntity<List<OrderDTO>> getAllUsers(){
+	public ResponseEntity<List<OrderDTO>> getAllOrders(){
 		List<OrderDTO> temp = orderService.findAll();
 		
 		return ResponseEntity.ok().body(temp);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<OrderDTO> getUserById(@PathVariable Long id){
+	public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id){
 		OrderDTO obj = orderService.findById(id);
 		
 		return ResponseEntity.ok().body(obj);
@@ -46,7 +46,7 @@ public class OrdersResource {
 	
 	//POST CONTROLLERS
 	@PostMapping
-	public ResponseEntity<OrderDTO> createUser(@RequestBody OrderDTO dto){
+	public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO dto){
 		OrderDTO tempDTO = orderService.insert(dto);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -57,8 +57,8 @@ public class OrdersResource {
 	
 	//DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-		orderService.deleteUser(id);
+	public ResponseEntity<Void> deleteOrder(@PathVariable Long id){
+		orderService.deleteOrder(id);
 		
 		return ResponseEntity.noContent().build();
 	}
