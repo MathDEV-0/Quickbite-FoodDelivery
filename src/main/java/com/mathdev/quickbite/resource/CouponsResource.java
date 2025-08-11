@@ -60,7 +60,7 @@ public class CouponsResource {
 
 	// PUT CONTROLLERS
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CouponDTO> updateOrder(@PathVariable Long id, @RequestBody CouponDTO dto) {
+	public ResponseEntity<CouponDTO> updateCoupon(@PathVariable Long id, @RequestBody CouponDTO dto) {
 		dto = couponService.update(id, dto);
 
 		return ResponseEntity.ok().body(dto);

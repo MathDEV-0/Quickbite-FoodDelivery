@@ -19,59 +19,59 @@ import com.mathdev.quickbite.dto.ProductDTO;
 import com.mathdev.quickbite.dto.RestaurantDTO;
 import com.mathdev.quickbite.services.RestaurantService;
 
-
 @RestController
 @RequestMapping(value = "/restaurants")
 public class RestaurantResource {
-	
+
 	@Autowired
 	RestaurantService restaurantService;
-	
-	//GET CONTROLLERS
+
+	// GET CONTROLLERS
 	@GetMapping
-	public ResponseEntity<List<RestaurantDTO>> getAllRestaurants(){
+	public ResponseEntity<List<RestaurantDTO>> getAllRestaurants() {
+
 		List<RestaurantDTO> temp = restaurantService.findAll();
-		
+
 		return ResponseEntity.ok().body(temp);
+
 	}
-	
+
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long id){
+	public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long id) {
 		RestaurantDTO obj = restaurantService.findById(id);
-		
+
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
 	@GetMapping("/{id}/products")
-    public List<ProductDTO> findProducts(@PathVariable Long id) {
-        return restaurantService.findProductsByRestaurant(id);
-    }
-	
-	//POST CONTROLLERS
+	public List<ProductDTO> findProducts(@PathVariable Long id) {
+		return restaurantService.findProductsByRestaurant(id);
+	}
+
+	// POST CONTROLLERS
 	@PostMapping
-	public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO dto){
+	public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO dto) {
 		RestaurantDTO tempDTO = restaurantService.insert(dto);
-		
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(dto.id()).toUri();
-		
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.id()).toUri();
+
 		return ResponseEntity.created(uri).body(tempDTO);
 	}
-	
-	//DELETE CONTROLLERS
+
+	// DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 		restaurantService.deleteUser(id);
-		
+
 		return ResponseEntity.noContent().build();
 	}
-	
-	//PUT CONTROLLERS
+
+	// PUT CONTROLLERS
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<RestaurantDTO> updateUser(@PathVariable Long id,@RequestBody RestaurantDTO dto){
+	public ResponseEntity<RestaurantDTO> updateUser(@PathVariable Long id, @RequestBody RestaurantDTO dto) {
 		dto = restaurantService.update(id, dto);
-		
+
 		return ResponseEntity.ok().body(dto);
 	}
-	
+
 }

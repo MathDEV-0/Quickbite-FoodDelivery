@@ -55,7 +55,7 @@ public class ProductResource {
 	//DELETE CONTROLLERS
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
-		userService.deleteUser(id);
+		userService.deleteProduct(id);
 		
 		return ResponseEntity.noContent().build();
 	}

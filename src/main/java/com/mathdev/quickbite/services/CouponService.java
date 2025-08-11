@@ -10,7 +10,8 @@ import com.mathdev.quickbite.dto.CouponDTO;
 
 
 import com.mathdev.quickbite.repositories.CouponRepository;
-
+import com.mathdev.quickbite.services.exceptions.DatabaseException;
+import com.mathdev.quickbite.services.exceptions.ResourceNotFoundException;
 import com.mathdev.quickbite.entities.Coupon;
 
 @Service
@@ -22,24 +23,33 @@ public class CouponService {
 
 	// GET SERVICES
 	public List<CouponDTO> findAll() {
-		return repo.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+		try{
+			return repo.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+		}catch (Exception e) {
+            throw new DatabaseException("Error retrieving coupons: " + e.getMessage());
+        }
 	}
 	
 	public CouponDTO findById(Long id) {
-		Coupon obj = repo.findById(id).orElseThrow(() -> new RuntimeException("Coupon not found!"));
+		Coupon obj = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Coupon not found with id " + id));
 		return toDTO(obj);
 	}
 
 	// POST SERVICES
 	public CouponDTO insert(CouponDTO dto) {
-		Coupon obj = fromDTO(dto);
-		obj = repo.save(obj);
-		return toDTO(obj);
+		try {
+			Coupon obj = fromDTO(dto);
+
+			obj = repo.save(obj);
+			return toDTO(obj);
+		} catch (Exception e) {
+			throw new DatabaseException("Error saving coupon: " + e.getMessage());
+		}
 	}
 
 	// PUT SERVICES
 	public CouponDTO update(Long id, CouponDTO newData) {
-		Coupon entity = repo.findById(id).orElseThrow(() -> new RuntimeException("Coupon not found"));
+		Coupon entity = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Coupon not found with id " + id));
 
 		entity.setCode(newData.code());
 		entity.setDiscount(newData.discount());
@@ -51,7 +61,12 @@ public class CouponService {
 
 	// DELETE SERVICES
 	public void delete(Long id) {
-		repo.deleteById(id);
+		try {
+	        repo.deleteById(id);
+	    } catch (Exception e) {
+	        throw new DatabaseException("Cannot delete coupon with id " + id + " due to database constraints.");
+	    }
+
 	}
 
 	// AUXILIARY METHODS (CONVERSION)
