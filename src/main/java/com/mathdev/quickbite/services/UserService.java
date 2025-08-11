@@ -3,9 +3,8 @@ package com.mathdev.quickbite.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hibernate.TransientObjectException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.OrderDTO;
