@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mathdev.quickbite.dto.ProductDTO;
 import com.mathdev.quickbite.entities.Product;
-import com.mathdev.quickbite.entities.Restaurant;
+import com.mathdev.quickbite.mapper.ProductMapper;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
 import com.mathdev.quickbite.services.exceptions.DatabaseException;
@@ -30,7 +30,7 @@ public class ProductService {
 		try {
 			List<Product> products = repo.findAll();
 
-			return products.stream().map(this::toDTO).toList();
+			return products.stream().map(ProductMapper::toDTO).toList();
 		} catch (Exception e) {
 			throw new DatabaseException("Error retrieving products: " + e.getMessage());
 		}
@@ -40,17 +40,17 @@ public class ProductService {
 		Product obj = repo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found!"));
 
-		return toDTO(obj);
+		return ProductMapper.toDTO(obj);
 	}
 
 	// POST SERVICES
 	public ProductDTO insert(ProductDTO dto) {
 		try{
-			Product obj = fromDTO(dto);
+			Product obj = ProductMapper.fromDTO(dto,restaurantRepository);
 		
 		obj = repo.save(obj);
 
-		return toDTO(obj);
+		return ProductMapper.toDTO(obj);
 		}catch (Exception e) {
             throw new DatabaseException("Error saving product: " + e.getMessage());
         }
@@ -76,7 +76,7 @@ public class ProductService {
 		
 		updateData(entity, newUser);
 
-		return toDTO(repo.save(entity));
+		return ProductMapper.toDTO(repo.save(entity));
 		}catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
 		}
@@ -88,15 +88,4 @@ public class ProductService {
 		entity.setDescription(newData.description());
 	}
 
-	private Product fromDTO(ProductDTO dto) {
-		Restaurant restaurant = restaurantRepository.findById(dto.restaurantId())
-				.orElseThrow(() -> new RuntimeException("Restaurant not found"));
-
-		return new Product(dto.id(), dto.name(), dto.description(), dto.basePrice(), restaurant);
-	}
-
-	private ProductDTO toDTO(Product entity) {
-		return new ProductDTO(entity.getId(), entity.getName(), entity.getDescription(), entity.getBasePrice(),
-				entity.getRestaurant().getId());
-	}
 }
