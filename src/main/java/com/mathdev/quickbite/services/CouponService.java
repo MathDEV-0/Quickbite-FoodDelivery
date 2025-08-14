@@ -13,6 +13,7 @@ import com.mathdev.quickbite.repositories.CouponRepository;
 import com.mathdev.quickbite.services.exceptions.DatabaseException;
 import com.mathdev.quickbite.services.exceptions.ResourceNotFoundException;
 import com.mathdev.quickbite.entities.Coupon;
+import com.mathdev.quickbite.mapper.CouponMapper;
 
 @Service
 public class CouponService {
@@ -24,7 +25,7 @@ public class CouponService {
 	// GET SERVICES
 	public List<CouponDTO> findAll() {
 		try{
-			return repo.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+			return repo.findAll().stream().map(CouponMapper::toDTO).collect(Collectors.toList());
 		}catch (Exception e) {
             throw new DatabaseException("Error retrieving coupons: " + e.getMessage());
         }
@@ -32,16 +33,16 @@ public class CouponService {
 	
 	public CouponDTO findById(Long id) {
 		Coupon obj = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Coupon not found with id " + id));
-		return toDTO(obj);
+		return CouponMapper.toDTO(obj);
 	}
 
 	// POST SERVICES
 	public CouponDTO insert(CouponDTO dto) {
 		try {
-			Coupon obj = fromDTO(dto);
+			Coupon obj = CouponMapper.fromDTO(dto);
 
 			obj = repo.save(obj);
-			return toDTO(obj);
+			return CouponMapper.toDTO(obj);
 		} catch (Exception e) {
 			throw new DatabaseException("Error saving coupon: " + e.getMessage());
 		}
@@ -56,7 +57,7 @@ public class CouponService {
 		entity.setExpiry(newData.moment());
 
 
-		return toDTO(repo.save(entity));
+		return CouponMapper.toDTO(repo.save(entity));
 	}
 
 	// DELETE SERVICES
@@ -69,17 +70,4 @@ public class CouponService {
 
 	}
 
-	// AUXILIARY METHODS (CONVERSION)
-	private CouponDTO toDTO(Coupon entity) {
-		return new CouponDTO(entity.getId(), entity.getCode(), entity.getDiscount(), entity.getExpiry());
-	}
-
-	private Coupon fromDTO(CouponDTO dto) {
-		Coupon entity = new Coupon();
-		entity.setCode(dto.code());
-		entity.setDiscount(dto.discount());
-		entity.setExpiry(dto.moment());
-
-		return entity;
-	}
 }
