@@ -11,6 +11,7 @@ import com.mathdev.quickbite.dto.ProductDTO;
 import com.mathdev.quickbite.dto.RestaurantDTO;
 import com.mathdev.quickbite.entities.Product;
 import com.mathdev.quickbite.entities.Restaurant;
+import com.mathdev.quickbite.mapper.RestaurantMapper;
 import com.mathdev.quickbite.repositories.ProductRepository;
 import com.mathdev.quickbite.repositories.RestaurantRepository;
 import com.mathdev.quickbite.services.exceptions.DatabaseException;
@@ -32,7 +33,8 @@ public class RestaurantService {
 		try {
 			List<Restaurant> restaurants = repo.findAll();
 
-			return restaurants.stream().map(this::toDTO).collect(Collectors.toList()); // fitful for Java < 16 versions
+			return restaurants.stream().map(RestaurantMapper::toDTO).collect(Collectors.toList()); // fitful for Java <
+																									// 16 versions
 		} catch (Exception e) {
 			throw new DatabaseException("Error retrieving restaurants: " + e.getMessage());
 		}
@@ -42,7 +44,7 @@ public class RestaurantService {
 		Restaurant obj = repo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Restaurant with id " + id + " not found!"));
 
-		return toDTO(obj);
+		return RestaurantMapper.toDTO(obj);
 	}
 
 	public List<ProductDTO> findProductsByRestaurant(Long restaurantId) {
@@ -60,11 +62,11 @@ public class RestaurantService {
 	// POST SERVICES
 	public RestaurantDTO insert(RestaurantDTO dto) {
 		try {
-			Restaurant obj = fromDTO(dto);
+			Restaurant obj = RestaurantMapper.fromDTOInsert(dto);
 
 			obj = repo.save(obj);
 
-			return toDTO(obj);
+			return RestaurantMapper.toDTO(obj);
 		} catch (Exception e) {
 			throw new DatabaseException("Error saving product: " + e.getMessage());
 		}
@@ -84,28 +86,20 @@ public class RestaurantService {
 
 	// PUT SERVICES
 	public RestaurantDTO update(Long id, RestaurantDTO newData) {
-		try {
-			Restaurant entity = repo.getReferenceById(id);
+	    try {
+	        Restaurant updatedRestaurant = RestaurantMapper.fromDTOUpdate(
+	            new RestaurantDTO(id, newData.name(), newData.email(), newData.address()),
+	            repo
+	        );
 
-			updateData(entity, newData);
+	        updatedRestaurant = repo.save(updatedRestaurant);
+	        return RestaurantMapper.toDTO(updatedRestaurant);
 
-			return toDTO(repo.save(entity));
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException(id);
-		}
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id);
+	    }
 	}
 
-	// AUXILIARY METHODS
-	private void updateData(Restaurant entity, RestaurantDTO newData) {
-		entity.setName(newData.name());
-		entity.setAddress(newData.address());
-	}
 
-	private Restaurant fromDTO(RestaurantDTO dto) {
-		return new Restaurant(dto.id(), dto.name(), null, null, dto.address());
-	}
 
-	private RestaurantDTO toDTO(Restaurant entity) {
-		return new RestaurantDTO(entity.getId(), entity.getName(), entity.getEmail(), entity.getAddress());
-	}
 }

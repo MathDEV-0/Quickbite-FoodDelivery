@@ -77,10 +77,10 @@ public class TestConfig implements CommandLineRunner{
 	    u2.setCart(cart2);
 	    userRepository.saveAll(Arrays.asList(u1, u2));
 
-	    Restaurant r1 = new Restaurant(null,"Caldeirão Furado","caldeiraofurado@hogwarts.com","1235","Beco Diagonal");
-	    Restaurant r2 = new Restaurant(null,"Três Vassouras","tresvassouras@hogwarts.com","1235","Hogsmeade");
-	    Restaurant r3 = new Restaurant(null, "Zonko's Doces & Travessuras", "zonkos@hogwarts.com", "1235", "Hogsmeade");
-	    Restaurant r4 = new Restaurant(null, "Florean Fortescue Sorveteria", "florean@hogwarts.com", "1235", "Beco Diagonal");
+	    Restaurant r1 = new Restaurant(null,"Caldeirão Furado","caldeiraofurado@hogwarts.com","123435","Beco Diagonal");
+	    Restaurant r2 = new Restaurant(null,"Três Vassouras","tresvassouras@hogwarts.com","123335","Hogsmeade");
+	    Restaurant r3 = new Restaurant(null, "Zonko's Doces & Travessuras", "zonkos@hogwarts.com", "1232315", "Hogsmeade");
+	    Restaurant r4 = new Restaurant(null, "Florean Fortescue Sorveteria", "florean@hogwarts.com", "1235675", "Beco Diagonal");
 	    restaurantRepository.saveAll(Arrays.asList(r1,r2,r3,r4));
 
 	    Coupon cp1 = new Coupon(null,"HOGWARTS10",10.0,true, Instant.parse("2025-08-09T14:00:00Z"));
