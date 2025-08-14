@@ -99,7 +99,7 @@ public class OrderService {
 		entity.setMoment(newData.moment());
 		if (newData.client() != null) {
 			User user = userRepository.findById(newData.client().id())
-					.orElseThrow(() -> new RuntimeException("User from this order not found"));
+					.orElseThrow(() -> new ResourceNotFoundException("User from this order not found"));
 			entity.setClient(user);
 		}
 	}

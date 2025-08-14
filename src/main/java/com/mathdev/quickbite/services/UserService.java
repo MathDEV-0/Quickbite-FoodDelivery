@@ -3,7 +3,6 @@ package com.mathdev.quickbite.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +17,8 @@ import com.mathdev.quickbite.repositories.OrderRepository;
 import com.mathdev.quickbite.repositories.UserRepository;
 import com.mathdev.quickbite.services.exceptions.DatabaseException;
 import com.mathdev.quickbite.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -68,7 +69,7 @@ public class UserService {
 
 	// DELETE SERVICES
 	public void deleteUser(Long id) {
-		if(!repo.existsById(id)) {
+		if (!repo.existsById(id)) {
 			throw new ResourceNotFoundException(id);
 		}
 		try {
@@ -80,17 +81,14 @@ public class UserService {
 
 	// PUT SERVICES
 	public UserDTO update(Long id, UserDTO newUser) {
-		User entity = repo.getReferenceById(id);
-		updateData(entity, newUser);
+		try {
+			User entity = repo.getReferenceById(id);
+			UserMapper.updateData(entity, newUser);
 
-		return UserMapper.toDTO(repo.save(entity));
-	}
-
-	// AUXILIARY METHODS
-	private void updateData(User entity, UserDTO newUser) {
-		entity.setName(newUser.name());
-		entity.setEmail(newUser.email());
-		entity.setAddress(newUser.address());
+			return UserMapper.toDTO(repo.save(entity));
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 }
